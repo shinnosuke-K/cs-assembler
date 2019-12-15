@@ -56,6 +56,8 @@ func secondPass(file io.Reader) {
 	}
 }
 
+// Remove unnecessary characters
+// eg. Space character and Characters after /
 func processString(text string) string {
 	req := regexp.MustCompile(`\s{3,}`)
 	processText := req.ReplaceAllString(text, "")
@@ -122,6 +124,7 @@ func createBinaryLists(file io.Reader) []string {
 	return binaryList
 }
 
+// Convert numbers to binary
 func encodeBinary(num int) string {
 	bin := ""
 	for n := 0; n < 16; n++ {
@@ -131,6 +134,7 @@ func encodeBinary(num int) string {
 	return bin
 }
 
+// Get name without extension
 func getName(filePath string) string {
 	req := regexp.MustCompile(`.*/`)
 	filename := req.ReplaceAllString(filePath, "")
