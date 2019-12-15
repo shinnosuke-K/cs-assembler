@@ -30,6 +30,10 @@ func InputSymbol(symbol string, value int) {
 	Symbol[symbol] = value
 }
 
-func GetSymbolValue(symbol string) int {
-	return Symbol[symbol]
+func GetSymbolValue(symbol string) (int, bool) {
+	if v, ok := Symbol[symbol]; !ok {
+		return 0, false
+	} else {
+		return v, ok
+	}
 }
