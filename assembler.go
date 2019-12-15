@@ -132,6 +132,14 @@ func encodeBinary(num int) string {
 	return bin
 }
 
+func getName(filePath string) string {
+	req := regexp.MustCompile(`.*/`)
+	filename := req.ReplaceAllString(filePath, "")
+
+	req = regexp.MustCompile(`\..*`)
+	return req.ReplaceAllString(filename, "")
+}
+
 func main() {
 
 	passFile, err := os.Open(os.Args[1])
@@ -146,6 +154,4 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	binaryLists := createBinaryLists(encodeFile)
-	fmt.Println(binaryLists)
 }
