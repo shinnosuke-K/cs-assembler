@@ -16,7 +16,6 @@ import (
 // First Pass
 // Add the label symbols
 func firstPass(file io.Reader) {
-
 	var text string
 
 	scanFile := bufio.NewScanner(file)
@@ -65,14 +64,15 @@ func processString(text string) string {
 	return req.ReplaceAllString(processText, "")
 }
 
-func writeBinary(file io.Reader) {
-	scanFile := bufio.NewScanner(file)
+func createBinaryLists(file io.Reader) []string {
+	var binaryList []string
 
+	scanFile := bufio.NewScanner(file)
 	for scanFile.Scan() {
 
 		text := processString(scanFile.Text())
 
-		if len(text) == 0 {
+		if len(text) == 0 || strings.Contains(text, "(") {
 			continue
 		}
 
@@ -81,12 +81,11 @@ func writeBinary(file io.Reader) {
 		if string(text[0]) == "@" {
 			if v, err := strconv.Atoi(text[1:]); err != nil {
 				value, _ := symbolTable.GetSymbolValue(text[1:])
-				fmt.Println(encodeBinary(value))
+				binaryList = append(binaryList, encodeBinary(value))
 
 			} else {
-				fmt.Println(encodeBinary(v))
+				binaryList = append(binaryList, encodeBinary(v))
 			}
-			fmt.Println()
 			continue
 		}
 
@@ -118,9 +117,10 @@ func writeBinary(file io.Reader) {
 			out += comp + dest + jump
 
 		}
-		fmt.Println(out)
-		fmt.Println()
+		fmt.Println(text, out)
+		binaryList = append(binaryList, out)
 	}
+	return binaryList
 }
 
 func encodeBinary(num int) string {
@@ -146,5 +146,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	writeBinary(encodeFile)
+	binaryLists := createBinaryLists(encodeFile)
+	fmt.Println(binaryLists)
 }
