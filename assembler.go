@@ -117,7 +117,6 @@ func createBinaryLists(file io.Reader) []string {
 			out += comp + dest + jump
 
 		}
-		fmt.Println(text, out)
 		binaryList = append(binaryList, out)
 	}
 	return binaryList
@@ -140,6 +139,18 @@ func getName(filePath string) string {
 	return req.ReplaceAllString(filename, "")
 }
 
+func writeBinary(binaryLists []string, name string) {
+	openFile, err := os.OpenFile("./output/"+name+".hack", os.O_CREATE|os.O_WRONLY, 0666)
+	defer openFile.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, binary := range binaryLists {
+		fmt.Fprintln(openFile, binary)
+	}
+}
+
 func main() {
 
 	passFile, err := os.Open(os.Args[1])
@@ -154,4 +165,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	binaryLists := createBinaryLists(encodeFile)
+	name := getName(os.Args[1])
+	writeBinary(binaryLists, name)
 }
